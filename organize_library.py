@@ -90,10 +90,16 @@ def organize(DOMDocument, symbol_list, bitmap_list, xfl_path):
     # Move symbols and make folders
     folders_to_add = []
     for symbol_type in symbol_dict:
-        folders_to_add.append({
-                    "@name": symbol_type,
-                    "@isExpanded": "true",
-                })
+        if symbol_type == "unknown":
+            folders_to_add.append({
+                        "@name": symbol_type,
+                        "@isExpanded": "true",
+                    })
+        else:
+            folders_to_add.append({
+                        "@name": symbol_type,
+                        "@isExpanded": "false",
+                    })
         for symbol in symbol_dict[symbol_type]:
             old_new_file_dict[symbol.replace(".xml", "")] = f"{symbol_type}/{os.path.basename(os.path.normpath(symbol))}".replace(".xml", "")
             old_symbol_path = os.path.join(library_path, symbol)
@@ -103,7 +109,7 @@ def organize(DOMDocument, symbol_list, bitmap_list, xfl_path):
     # Move bitmaps
     folders_to_add.append({
                     "@name": "media",
-                    "@isExpanded": "true",
+                    "@isExpanded": "false",
                 })
     for bitmap in bitmap_list:
         old_new_file_dict[bitmap.replace(".png", "")] = f"media/{os.path.basename(os.path.normpath(bitmap))}".replace(".png", "")

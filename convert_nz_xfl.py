@@ -31,7 +31,6 @@ def main():
     print(f"{Fore.LIGHTBLUE_EX}Enter the {Fore.GREEN}XFL {Fore.LIGHTBLUE_EX}you want to convert")
     while True:
         tocopy_xfl_path = uf.ask_for_directory(is_file=False, look_for_files=("DOMDocument.xml", "LIBRARY",))
-        #tocopy_xfl_path = r"C:\Users\zacha\Documents\Coding Stuff\zombie_giga_garg"
 
         error = check_for_improper_symbols.check(tocopy_xfl_path)
         if error:
