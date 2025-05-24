@@ -5,21 +5,19 @@ import json
 init()
 
 
-def fix(DOMDocument, old_new_file_dict, xfl_path, unknown_bitmap_list):
-    new_symbol_list = []
-    for symbol_instance in DOMDocument["symbols"]["Include"]:
-        href = symbol_instance["@href"]
-        new_symbol_list.append(href)
+def fix(DOMDocument, xfl_path, old_new_media_dict, symbol_list):
 
-
-    for symbol in new_symbol_list:
-        symbol_path = os.path.join(xfl_path, "LIBRARY", symbol)
+    for symbol in symbol_list:
+        if symbol != "main_sprite.xml":
+            symbol_path = os.path.join(xfl_path, "LIBRARY", "sprite", symbol)
+        else:
+            symbol_path = os.path.join(xfl_path, "LIBRARY", symbol)
         symbol_file = uf.open_xml_file(symbol_path)
 
         # Fix main symbol name
         current_name = symbol_file["DOMSymbolItem"]["@name"]
-        if symbol != "main_sprite.xml" and not current_name.startswith("image/"):
-            symbol_file["DOMSymbolItem"]["@name"] = old_new_file_dict[current_name]
+        if symbol != "main_sprite.xml" and not symbol.startswith("image/"):
+            symbol_file["DOMSymbolItem"]["@name"] = "sprite/" + current_name
         
         # Fix symbol type
         symbol_file["DOMSymbolItem"]["@symbolType"] = "graphic"
@@ -31,21 +29,16 @@ def fix(DOMDocument, old_new_file_dict, xfl_path, unknown_bitmap_list):
             frame_list = uf.fix_layer_or_frame_list(layer["frames"]["DOMFrame"], to_layer=True)
             for frame in frame_list:
                 elements = frame["elements"]
-                if elements == None:
-                    continue
-                if isinstance(elements, dict):
-                    key_list = elements.keys()
-                    for element_type in key_list:
-                        if isinstance(elements[element_type], dict):
-                            current_library_item = elements[element_type]["@libraryItemName"]
-                            if not current_library_item.startswith("unknown/"):
-                                elements[element_type]["@libraryItemName"] = old_new_file_dict[current_library_item]
-                        elif isinstance(elements[element_type], list):
-                            for element_type2 in elements[element_type]:
-                                if isinstance(element_type2, dict):
-                                    current_library_item = element_type2["@libraryItemName"]
-                                    if not current_library_item.startswith("unknown/"):
-                                        element_type2["@libraryItemName"] = old_new_file_dict[current_library_item]
+                if elements == None: continue
+
+                for element_instance in elements.copy():
+                    library_item = elements[element_instance]["@libraryItemName"]
+                    if element_instance == "DOMBitmapInstance":
+                        elements["DOMSymbolInstance"] = elements["DOMBitmapInstance"]
+                        elements["DOMSymbolInstance"]["@libraryItemName"] = "image/" + old_new_media_dict[library_item.replace(".png", "")]
+                        elements.pop("DOMBitmapInstance")
+                    elif element_instance == "DOMSymbolInstance":
+                        elements[element_instance]["@libraryItemName"] = "sprite/" + library_item
 
                 frame["elements"] = elements
             layer["frames"]["DOMFrame"] = frame_list

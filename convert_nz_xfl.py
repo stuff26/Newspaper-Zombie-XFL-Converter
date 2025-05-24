@@ -4,6 +4,7 @@ import os
 from shutil import copytree, rmtree
 import json
 import xmltodict
+import tkinter as tk
 init()
 
 import check_for_improper_symbols
@@ -13,15 +14,17 @@ import organize_library
 import fix_symbol_names
 import make_xfl_datajson
 import fix_media_image_symbols
+import make_image_symbols
+import rename_media
 
-
+if not uf.is_mobile():
+    root = tk.Tk()
+    root.withdraw()
 
 def main():
-
     print(f"{Fore.LIGHTBLUE_EX}Enter the prefix you want the {Fore.GREEN}XFL {Fore.LIGHTBLUE_EX}to use (ex. {Fore.GREEN}zombie_tutorial_flag{Fore.LIGHTBLUE_EX})")
     while True:
         xfl_prefix = uf.better_user_input().lower()
-        #xfl_prefix = "zombie_modern_gargantuar_giga"
         if xfl_prefix == "":
             print(f"{Fore.LIGHTMAGENTA_EX}Enter a prefix")
             continue
@@ -47,13 +50,13 @@ def main():
                 rmtree(xfl_path)
             except PermissionError:
                 print(f"{Fore.LIGHTMAGENTA_EX}ERROR: can't remove {Fore.GREEN}{xfl_path}")
-                input(f"{Fore.LIGHTBLUE_EX}Press ENTER to attempt to clear out the directory")
+                input(f"{Fore.LIGHTBLUE_EX}Press ENTER to attempt to clear out the directory again")
                 continue
         try:
             copytree(tocopy_xfl_path, xfl_path)
         except FileExistsError:
             print(f"{Fore.LIGHTMAGENTA_EX}ERROR: could not write to {Fore.GREEN}{xfl_path}{Fore.LIGHTMAGENTA_EX}, the folder might be being used by another program")
-            input(f"{Fore.LIGHTBLUE_EX}Press ENTER to attempt to clear out the directory")
+            input(f"{Fore.LIGHTBLUE_EX}Press ENTER to attempt to clear out the directory again")
             continue
         break
     print(f"{Fore.LIGHTBLUE_EX}Cleared out {Fore.GREEN}{xfl_path}")
@@ -88,19 +91,17 @@ def main():
     print(f"{Fore.LIGHTBLUE_EX}Split layers using multiple symbols")
 
     # Organize library
-    DOMDocument, old_new_file_dict = organize_library.organize(DOMDocument, symbol_list, bitmap_list, xfl_path)
+    DOMDocument = organize_library.organize(DOMDocument, symbol_list, bitmap_list, xfl_path)
     print(f"{Fore.LIGHTBLUE_EX}Organized library")
 
-    # Rename all media symbols and rename images to match their media
-    DOMDocument, old_new_image_dict, old_new_media_dict, unknown_bitmap_list = fix_media_image_symbols.fix(DOMDocument, xfl_path, xfl_prefix, bitmap_list)
-    for thing in old_new_file_dict.copy():
-        if "image/"+thing+".xml" in old_new_image_dict:
-            old_new_file_dict[thing] = old_new_image_dict["image/"+thing+".xml"].replace(".xml", "")
-        elif thing in old_new_media_dict:
-            old_new_file_dict[thing] = "media/" + old_new_media_dict[thing]
+    # Rename all media to a consistent name
+    DOMDocument, old_new_media_dict = rename_media.rename(DOMDocument, xfl_prefix, bitmap_list, xfl_path)
+
+    # Make image symbols for all media
+    DOMDocument = make_image_symbols.make(DOMDocument, xfl_path)
 
     # Fix symbol names to reference folders
-    fix_symbol_names.fix(DOMDocument, old_new_file_dict, xfl_path, unknown_bitmap_list)
+    fix_symbol_names.fix(DOMDocument, xfl_path, old_new_media_dict, symbol_list)
 
     # Make data.json
     make_xfl_datajson.main(xfl_path, old_new_media_dict, xfl_prefix)
@@ -108,9 +109,10 @@ def main():
 
     # Final adjustments
     DOMDocument["timelines"]["DOMTimeline"]["@name"] = "animation"
-    os.rename(os.path.join(xfl_path, "LIBRARY"), os.path.join(xfl_path, "library",))
     DOMDocument["@width"], DOMDocument["@height"] = "390", "390"
     DOMDocument["@backgroundColor"] = "#666666"
+
+    os.rename(os.path.join(xfl_path, "LIBRARY"), os.path.join(xfl_path, "library",))
 
     uf.write_to_file({"DOMDocument": DOMDocument,}, DOMDocument_path, is_xml=True)
     input(f"{Fore.LIGHTBLUE_EX}\nSuccessfully written new XFL to {Fore.GREEN}{xfl_path}")
@@ -120,7 +122,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-    """"
+    """
     try:
         main()
     except Exception as e:

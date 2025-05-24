@@ -10,15 +10,6 @@ CHECKING_SYMBOL_TYPES = {"main_sprite.xml", "label/", "sprite/"}
 
 def split(symbol_list, xfl_path):
 
-
-    raw_symbol_list = symbol_list
-    symbol_list = []
-    for symbol in raw_symbol_list:
-        for checking_symbol in CHECKING_SYMBOL_TYPES:
-            if symbol.startswith(checking_symbol):
-                symbol_list.append(symbol)
-                break
-
     for symbol in symbol_list:
         symbol_path = os.path.join(xfl_path, "LIBRARY", symbol)
         symbol_file = uf.open_xml_file(symbol_path)
@@ -70,7 +61,11 @@ def separate_layer(layer):
             continue
         
         # Get symbol found in frame
-        symbol_in_frame = frame["elements"]["DOMSymbolInstance"].get("@libraryItemName")
+        try:
+            if isinstance(frame["elements"]["DOMSymbolInstance"], dict): symbol_in_frame = frame["elements"]["DOMSymbolInstance"].get("@libraryItemName")
+            else: symbol_in_frame = frame["elements"]["DOMSymbolInstance"][0].get("@libraryItemName")
+        except KeyError:
+            symbol_in_frame = frame["elements"]["DOMBitmapInstance"].get("@libraryItemName")
 
         # If a different symbol is found from what is being checked, originally, or if this is the first keyframe found
         if current_symbol != symbol_in_frame:

@@ -2,10 +2,19 @@ import json
 from colorama import init, Fore
 import sys
 import os
-import re
 import xmltodict
 from PIL import Image
+from platform import system
+import tkinter as tk
+from tkinter import filedialog
 init()
+
+def is_mobile():
+    return system() in ['Android', 'iOS']
+
+def pick_directory():
+    directory = filedialog.askdirectory()
+    return directory
 
 # Remove illegal characters from a directory to prevent potential errors
 # - directory == given directory to clean out and return
@@ -26,8 +35,18 @@ def clean_directory(directory):
 # Returns: directory given inputted by user
 def ask_for_directory(is_file=False, look_for_files=None, accept_any=False):
     while True:
-        # Ask for directory
+        directory = None
+        """
+        if is_mobile():
+            directory = better_user_input(ask_directory=True)
+        else:
+            directory = pick_directory()
+        """
         directory = better_user_input(ask_directory=True)
+
+        # If nothing was entered
+        if directory == "":
+            return
         
         # Check if directory exists at all
         if not os.path.exists(directory):
