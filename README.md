@@ -15,9 +15,9 @@ You MUST have knowledge on how PAMs work in order to use this converter. You mus
 
 # How to use
 Sometimes the XFLs downloaded for NZ's drive will need to preping, this what you may need to do first:
-1. You will need to download and run (this script)[https://github.com/Endlin-Boeingstein/Adobe-Animate-Plugins-for-PvZ2-XFL-Project/blob/main/%E8%87%AA%E5%8A%A8%E7%9F%A2%E9%87%8F%E8%BD%AC%E4%BD%8D%E5%9B%BEEdge2Bitmap.jsfl]. This will convert all vectors into bitmaps
+1. You will need to download and run [this script](https://github.com/Endlin-Boeingstein/Adobe-Animate-Plugins-for-PvZ2-XFL-Project/blob/main/%E8%87%AA%E5%8A%A8%E7%9F%A2%E9%87%8F%E8%BD%AC%E4%BD%8D%E5%9B%BEEdge2Bitmap.jsfl). This will convert all vectors into bitmaps
 2. After that, delete any bitmaps that are not used. You will also need to rename any bitmaps that end in .png to ensure there are no overlapping names
-3. You will next have to ensure there are no keyframes with multiple symbols being used. You can use (this script)[https://github.com/stuff26/PvZ2-Helper-Functions/blob/main/scripts/check_xfl_errors.py] to check for any of those. You can ignore any errors that say there are layers with multiple symbol types as that will be fixed automatically. Separate any keyframes, however, that use multiple symbols
+3. You will next have to ensure there are no keyframes with multiple symbols being used. You can use [this script](https://github.com/stuff26/PvZ2-Helper-Functions/blob/main/scripts/check_xfl_errors.py) to check for any of those. You can ignore any errors that say there are layers with multiple symbol types as that will be fixed automatically. Separate any keyframes, however, that use multiple symbols
 
 Once you are done with that, you can use the converter
 1. Open the converter EXE
