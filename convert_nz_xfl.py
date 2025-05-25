@@ -2,9 +2,6 @@ from colorama import Fore, init
 import universal_functions as uf
 import os
 from shutil import copytree, rmtree
-import json
-import xmltodict
-import tkinter as tk
 init()
 
 import check_for_improper_symbols
@@ -16,10 +13,6 @@ import make_xfl_datajson
 import fix_media_image_symbols
 import make_image_symbols
 import rename_media
-
-if not uf.is_mobile():
-    root = tk.Tk()
-    root.withdraw()
 
 def main():
     print(f"{Fore.LIGHTBLUE_EX}Enter the prefix you want the {Fore.GREEN}XFL {Fore.LIGHTBLUE_EX}to use (ex. {Fore.GREEN}zombie_tutorial_flag{Fore.LIGHTBLUE_EX})")
@@ -98,10 +91,10 @@ def main():
     DOMDocument, old_new_media_dict = rename_media.rename(DOMDocument, xfl_prefix, bitmap_list, xfl_path)
 
     # Make image symbols for all media
-    DOMDocument = make_image_symbols.make(DOMDocument, xfl_path)
+    DOMDocument, image_to_converted_symbol_dict = make_image_symbols.make(DOMDocument, xfl_path, symbol_list)
 
     # Fix symbol names to reference folders
-    fix_symbol_names.fix(DOMDocument, xfl_path, old_new_media_dict, symbol_list)
+    fix_symbol_names.fix(DOMDocument, xfl_path, old_new_media_dict, symbol_list, image_to_converted_symbol_dict)
 
     # Make data.json
     make_xfl_datajson.main(xfl_path, old_new_media_dict, xfl_prefix)

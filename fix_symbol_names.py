@@ -5,7 +5,7 @@ import json
 init()
 
 
-def fix(DOMDocument, xfl_path, old_new_media_dict, symbol_list):
+def fix(DOMDocument, xfl_path, old_new_media_dict, symbol_list, image_to_converted_symbol_dict):
 
     for symbol in symbol_list:
         if symbol != "main_sprite.xml":
@@ -35,7 +35,7 @@ def fix(DOMDocument, xfl_path, old_new_media_dict, symbol_list):
                     library_item = elements[element_instance]["@libraryItemName"]
                     if element_instance == "DOMBitmapInstance":
                         elements["DOMSymbolInstance"] = elements["DOMBitmapInstance"]
-                        elements["DOMSymbolInstance"]["@libraryItemName"] = "image/" + old_new_media_dict[library_item.replace(".png", "")]
+                        elements["DOMSymbolInstance"]["@libraryItemName"] = "sprite/" + image_to_converted_symbol_dict["image/" + old_new_media_dict[library_item.replace(".png", "")]]
                         elements.pop("DOMBitmapInstance")
                     elif element_instance == "DOMSymbolInstance":
                         elements[element_instance]["@libraryItemName"] = "sprite/" + library_item
