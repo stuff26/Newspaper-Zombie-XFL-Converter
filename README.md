@@ -11,13 +11,13 @@ You MUST have knowledge on how PAMs work in order to use this converter. You mus
 - Organize the library into image, sprite, and media
 - Fix the names of symbols
 - Rename all sprites to be (prefix)_(number), like zombie_tutorial_1
-- Create new image symbols for every bitmap
+- Create new image symbols for every bitmap and create new sprite symbols to adjust those image symbols
 
 # How to use
 Sometimes the XFLs downloaded for NZ's drive will need to preping, this what you may need to do first:
-1. You will need to download and run [this script](https://github.com/Endlin-Boeingstein/Adobe-Animate-Plugins-for-PvZ2-XFL-Project/blob/main/%E8%87%AA%E5%8A%A8%E7%9F%A2%E9%87%8F%E8%BD%AC%E4%BD%8D%E5%9B%BEEdge2Bitmap.jsfl). This will convert all vectors into bitmaps
+1. You will need to download and run [this script](https://github.com/Endlin-Boeingstein/Adobe-Animate-Plugins-for-PvZ2-XFL-Project/blob/main/%E8%87%AA%E5%8A%A8%E7%9F%A2%E9%87%8F%E8%BD%AC%E4%BD%8D%E5%9B%BEEdge2Bitmap.jsfl) which is included in the release .rar file. This will convert all vectors into bitmaps quickly.
 2. After that, delete any bitmaps that are not used. You will also need to rename any bitmaps that end in .png to ensure there are no overlapping names
-3. You will next have to ensure there are no keyframes with multiple symbols being used. You can use [this script](https://github.com/stuff26/PvZ2-Helper-Functions/blob/main/scripts/check_xfl_errors.py) to check for any of those. You can ignore any errors that say there are layers with multiple symbol types as that will be fixed automatically. Separate any keyframes, however, that use multiple symbols
+3. You will next have to ensure there are no keyframes with multiple symbols being used. You can use [this script](https://github.com/stuff26/PvZ2-Helper-Functions/blob/main/scripts/check_xfl_errors.py) or use my helper functions tool which comes with the xfl error checker. Use the tool to find where those keyframes are. You can ignore any errors that say there are layers with multiple symbol types as that will be fixed automatically. Separate any keyframes, however, that use multiple symbols
 
 Once you are done with that, you can use the converter
 1. Open the converter EXE
@@ -27,5 +27,3 @@ Once you are done with that, you can use the converter
 5. Once it says complete, you now got a (mostly) working XFL. The prompt will let you know where the XFL will now be stored.
 6. Open the XFL in animate and press SAVE. You don't have to do any actual changes, but saving the XFL in animate will allow Sen to convert it
 7. Open the XFL in Sen, use Flash to PAM. When prompted, ensure `split labels` is set to FALSE, otherwise the PAM will not pack. Once that is done, you have a fully functional PAM!
-
-Please note that the PAM that is created will be slightly buggy. If you open the PAM back again with Sen, it will appear broken, so ensure you save a copy of the XFL! This will hopefully be fixed in the future but it may not be possible.
