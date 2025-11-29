@@ -1,3 +1,5 @@
+THIS IS AN OLD VERSION OF THE CONVERTER, PLEASE CHECK THE [2.0 VERSION OF HELPER FUNCTIONS](https://github.com/stuff26/PvZ2-Helper-Functions-2.0) FOR THE UPDATED VERSION.
+
 # Newspaper-Zombie-XFL-Converter
 
 This is a converter for the XFLs made by Newspaper Zombie (https://drive.google.com/drive/folders/10KsUxHu_9LJaSKAAaAeLCq2rSOmQCNHv). His assets are not game compatible, which will lead to tedious work by the user to convert them. This converter will handle the tedious work to help make the XFLs fit the PAM format that is needed.
